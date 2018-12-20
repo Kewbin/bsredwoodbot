@@ -1,7 +1,6 @@
 import discord
 import asyncio
 import os
-import re
 import random
 import brawlstats
 import json
