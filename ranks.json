@@ -1,0 +1,22 @@
+[
+{"rank": 1, "trophy": 0, "trophy_min": 0, "trophy_max": 9, "emoji": "<:rank1:525340502422323200>" },
+{"rank": 2, "trophy": 10, "trophy_min": 1, "trophy_max": 19, "emoji": "<:rank2:525340503332356121>" },
+{"rank": 3, "trophy": 20, "trophy_min": 10, "trophy_max": 29, "emoji": "<:rank3:525340505534496769>" },
+{"rank": 4, "trophy": 30, "trophy_min": 20, "trophy_max": 39, "emoji": "<:rank4:525340506042138644>" },
+{"rank": 5, "trophy": 40, "trophy_min": 30, "trophy_max": 59, "emoji": "<:rank5:525340506537066525>" },
+{"rank": 6, "trophy": 60, "trophy_min": 40, "trophy_max": 79, "emoji": "<:rank6:525340506604044288>" },
+{"rank": 7, "trophy": 80, "trophy_min": 60, "trophy_max": 99, "emoji": "<:rank7:525340507342372883>" },
+{"rank": 8, "trophy": 100, "trophy_min": 80, "trophy_max": 119, "emoji": "<:rank8:525340508902653952>" },
+{"rank": 9, "trophy": 120, "trophy_min": 100, "trophy_max": 139, "emoji": "<:rank9:525340509275947018>" },
+{"rank": 10, "trophy": 140, "trophy_min": 120, "trophy_max": 159, "emoji": "<:rank10:525340509586325535>" },
+{"rank": 11, "trophy": 160, "trophy_min": 140, "trophy_max": 179, "emoji": "<:rank11:525340510014013465>" },
+{"rank": 12, "trophy": 180, "trophy_min": 160, "trophy_max": 219, "emoji": "<:rank12:525340509926064140>" },
+{"rank": 13, "trophy": 220, "trophy_min": 180, "trophy_max": 259, "emoji": "<:rank13:525340512073285642>" },
+{"rank": 14, "trophy": 260, "trophy_min": 220, "trophy_max": 299, "emoji": "<:rank14:525340512539115535>" },
+{"rank": 15, "trophy": 300, "trophy_min": 260, "trophy_max": 339, "emoji": "<:rank15:525340512803356682>" },
+{"rank": 16, "trophy": 340, "trophy_min": 300, "trophy_max": 379, "emoji": "<:rank16:525341951688441857>" },
+{"rank": 17, "trophy": 380, "trophy_min": 340, "trophy_max": 419, "emoji": "<:rank17:525341952925761576>" },
+{"rank": 18, "trophy": 420, "trophy_min": 380, "trophy_max": 459, "emoji": "<:rank18:525341953240465439>" },
+{"rank": 19, "trophy": 460, "trophy_min": 420, "trophy_max": 499, "emoji": "<:rank19:525341955522297856>" },
+{"rank": 20, "trophy": 500, "trophy_min": 460, "trophy_max": 999999, "emoji": "<:rank20:525341955526361119>" }
+]
