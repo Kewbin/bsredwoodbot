@@ -134,7 +134,7 @@ async def on_message(message):
             embed.add_field(name='Duo Showdown Wins', value= '<:duoshowdown:525299098354712576> ' + str(profile.duo_showdown_victories))
             embed.add_field(name='Best Time as Boss', value= '<:boss:525299096567808023> ' + profile.best_time_as_boss)
             embed.add_field(name='Best Robo Rumble Time', value= '<:roborumble:525299100778889217> ' + profile.best_robo_rumble_time)
-            embed.add_field(name='Brawlers Unlocked', value= '**' + str(profile.brawlers_unlocked) + '**/22')
+            embed.add_field(name='Brawlers Unlocked', value= '<:cards:525383827632422958> **' + str(profile.brawlers_unlocked) + '**/22')
             embed.add_field(name='Club', value= profile.club.name + ' (#' + profile.club.tag + ')')
             await client.send_message(message.channel, embed = embed)
         except:
