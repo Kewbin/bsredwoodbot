@@ -117,9 +117,9 @@ async def on_message(message):
                 if '<@' in message2:
                     try:
                         linked = gc.open('BSlinked').sheet1
-                        message2 = message2.replace('<@', '')
-                        message2 = message2.replace('>', '')
-                        discid = linked.find(str(message.author.id))
+                        message3 = message2.replace('<@', '')
+                        message3 = message3.replace('>', '')
+                        discid = linked.find(message3)
                         game_id = linked.cell(discid.row, 2).value
                         try:
                             profile = bs.get_profile(game_id)
@@ -154,7 +154,8 @@ async def on_message(message):
         try:
             embed = discord.Embed(title=profile.name + ' (#' + profile.tag + ')', color= 0xffd633)
             embed.set_thumbnail(url= profile.avatar_url)
-            embed.add_field(name='Trophies', value= '**' + str(profile.trophies) + '**/' + str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
+            embed.add_field(name='Trophies', value= str(profile.trophies) + ' <:trophy:525016161285570571>')
+            embed.add_field(name='Highest Trophies', value= str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
             embed.add_field(name='Level', value= '<:levelstar:525297407383044097>' + str(profile.exp_level))
             embed.add_field(name='3v3 Wins', value= str(profile.victories))
             embed.add_field(name='Showdown Wins', value= '<:showdown:525299101022158878> ' + str(profile.solo_showdown_victories))
@@ -216,7 +217,6 @@ async def on_message(message):
         try:
             await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
-            print(message2)
             try:
                 profile = bs.get_profile(message2.upper())
             except:
