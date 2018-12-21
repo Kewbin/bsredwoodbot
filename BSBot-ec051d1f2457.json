@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "bsbot-226217",
+  "private_key_id": "ec051d1f245707de80095dc8b22215df5ab7cdee",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDH5+tqNsb1/0Wg\noF/A+g/xHcfiFLcsGzLiMMHFCXinouDyUQAl/smSV8eC8hfPZYR6G3ZuAQB/6vkE\nA8BCYTxE5fZjP92jz0TwhN8VvKDLbKFZn3ExObPODJeNwGUyeKsqWKMh8J+AxCXy\nX1f5E4jULw3hLzdjZ7Z+idhtFN1pFdkb4PK6v/6UkjHDyJkT+7IW5BDtq61sCsRS\ntGL6V9foW6nnuON3IzFBDR5ii5si6mIFIQGGlTGEY+ptiKs10fO7eWpQrpQiIK+U\nELYR7gKP7rxnF2Yqk5oTeONsz2x9CodcGBHQ0zsPM0xLmPLSPPo6h65JS88iEY6B\nJhlnC7G7AgMBAAECggEARz2f2FjQG9/OtPkiVrfnEYMO9kNyqc3BmvlMPMdsz7UM\nnF6Agonj1PriV4imMpuXlBqQYJCL2IppFuStUhqr61PWtDUQ7C1UALEhfXIdDZHX\niIR5RtUs/lvfcL1lcxCs0ykGbfR+K1n7uf3/cHzlMNTaCeuVPiA6WasPTYR3iViG\nDd07FyyQp44dZEqfCt//IzKOj7aJ27iJgOQpMbeM3F2zZBmYr9JlB6bhEehQGB6Q\nZmasy9pe9YXXZUVN8N/y/+cXemeBEoNfbOu7jSvpO+0hXtzi2PwXTGog0Q30Sxzf\nVfMt1upMOncdKMdYBiCyzJAbQDoZzlo2IJcUlIp6pQKBgQDq4NeD/Bl8MyglYGkM\nRTAf77Pd9RN8N6grEB6xeoM9JLqO/vrAvmFxhYhIB9rfV8LzIx2U8PfT+ol7zfXl\nc3/MLgiyTIphkvS+hzdzETsijBaIgZwDPm7BMbcpTNNiPk9rS24Bu9vgegsXocs1\n4KzS2G97AO9LPxUkbnZGbQ4AvwKBgQDZ4fm4cTFVGs+3xpCXaDohCeuUjzxynfwW\nu0vuJeG38uR9mU2KesV6Mf9c04rV+YXbSaYh/pHwyjlYLe7MglOD2fJ7axIthyjl\nJhcVCIUTU0fPXK+JYAZDSpVOFIhkWtVHlQ/v0pW2J1Aeb38bHCkgZ1RXCKm/AsoI\nQlI0SBfSBQKBgQC6b0YiKZVBFIolQOWhK7oLX4TyBXo1+yetJtp2HbzWZ7T9lD8N\nhxBpv4hxRGrjJRJFU/ZDJxJQXGmMr+si+g7Szydv/3lIAhHqugG1gFPkFDY+nEJu\nALyA9Slhyu1u6e64R+NF1QuunrD3TSGz3mbP5aR3ikJnA+eQR23ycNXQmQKBgQDV\nqD0DWyxvMi2DH1pmvrRR9bJoKdWy561udRhOXiNsCOl7KLvbEe1YmHK7ik3Y6ikT\nErOxHjvqjcOR7uj+7sYKw8x+rk5TCvlVS/bSj1o/yyjd9RvFcL5zek3TFVtyXYhL\n+6Z3HF/nEcIFNnzEDuddeTZBaqNaRdfsJW0LC68gKQKBgHK1cx7uoVFaQm6VQ36x\nmQdUkeezbOOsPwZ27AcwgrFbh2HdD3aO5h7obIqHXYqB0siAAvCyDCGb3cCsKcV6\n+1OBMlS497faCUNpSvqDPwlvI84kBp4IZziY0zwnZ5bXVWhqrUgxjMb97Y6mL0Z5\n52fEkDn4cn0TgRaWKpJI7bUy\n-----END PRIVATE KEY-----\n",
+  "client_email": "bsbotredwood@bsbot-226217.iam.gserviceaccount.com",
+  "client_id": "108560087435782443699",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bsbotredwood%40bsbot-226217.iam.gserviceaccount.com"
+}
