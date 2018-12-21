@@ -53,7 +53,6 @@ async def on_message(message):
             await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
             try:
-                await client.send_typing(message.channel)
                 club = bs.get_club(message2.upper())
             except:
                 error = await client.send_message(message.channel, ':no_entry: Could not find club with this tag or there was an error getting club data. Please try again!')
@@ -61,7 +60,6 @@ async def on_message(message):
                 await client.delete_message(error)
         except:
             try:
-                await client.send_typing(message.channel)
                 club = bs.get_club('RURJY9')
             except:
                 error = await client.send_message(message.channel, ':no_entry: There was an error getting club data. Please try again!')
@@ -69,7 +67,6 @@ async def on_message(message):
                 await client.delete_message(error)
 
         try:
-            await client.send_typing(message.channel)
             members = club.members
             embed = discord.Embed(title=club.name + ' (#' + club.tag + ')', description=club.description, color= 0xffd633)
             embed.set_thumbnail(url= club.badge_url)
@@ -115,12 +112,10 @@ async def on_message(message):
             await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
             try:
-                await client.send_typing(message.channel)
                 profile = bs.get_profile(message2.upper())
             except:
                 if '<@' in message2:
                     try:
-                        await client.send_typing(message.channel)
                         linked = gc.open('BSlinked').sheet1
                         message2 = message2.replace('<@', '')
                         message2 = message2.replace('>', '')
@@ -142,7 +137,6 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
-                await client.send_typing(message.channel)
                 linked = gc.open('BSlinked').sheet1
                 discid = linked.find(str(message.author.id))
                 game_id = linked.cell(discid.row, 2).value
@@ -158,7 +152,6 @@ async def on_message(message):
                 await client.delete_message(error)
         
         try:
-            await client.send_typing(message.channel)
             embed = discord.Embed(title=profile.name + ' (#' + profile.tag + ')', color= 0xffd633)
             embed.set_thumbnail(url= profile.avatar_url)
             embed.add_field(name='Trophies', value= '**' + str(profile.trophies) + '**/' + str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
@@ -192,7 +185,6 @@ async def on_message(message):
                 except:
                     pass
                 try:
-                    await client.send_typing(message.channel)
                     profile = bs.get_profile(message2.upper())
                     linked.append_row([str(message.author.id), message2.upper(), profile.name])
                     await client.send_message(message.channel, ':white_check_mark: Account succesfully linked to ' + profile.name + ' (#' + message2.upper() + ')')
@@ -230,7 +222,6 @@ async def on_message(message):
             except:
                 if '<@' in message2:
                     try:
-                        await client.send_typing(message.channel)
                         linked = gc.open('BSlinked').sheet1
                         message3 = message2.replace('<@', '')
                         message3 = message3.replace('>', '')
@@ -252,7 +243,6 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
-                await client.send_typing(message.channel)
                 linked = gc.open('BSlinked').sheet1
                 discid = linked.find(str(message.author.id))
                 game_id = linked.cell(discid.row, 2).value
@@ -268,7 +258,6 @@ async def on_message(message):
                 await client.delete_message(error)
 
         try:
-            await client.send_typing(message.channel)
             embed = discord.Embed(title=profile.name + ' (#' + profile.tag + ')', color= 0xffd633)
             brawlers = profile.brawlers
             x = 0
