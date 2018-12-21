@@ -4,3 +4,5 @@ websockets
 asyncio
 brawlstats
 requests
+gspread
+oauth2client
