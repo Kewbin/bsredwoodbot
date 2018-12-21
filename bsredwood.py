@@ -4,6 +4,7 @@ import os
 import random
 import brawlstats
 import json
+import datetime
 
 #Discord
 client = discord.Client()
@@ -258,6 +259,41 @@ async def on_message(message):
             await client.send_message(message.channel, embed = embed)
         except:
             pass
+        
+    elif '!EVENTS' == message1 or '!MAPS' == message1:
+        try:
+            message2 = str(message.content).split(' ',1)[1]
+        except:
+            pass
+        
+        events = bs.get_events()
+        y = 0
+        gmodes = json.loads(open('gamemodes.json').read())
+        modifiers = json.loads(open('modifiers.json').read())
+        for event in events.current:
+            try:
+                gmode = next(item for item in gmodes if item["gamemode"] == events.current[y].game_mode)
+            except:
+                pass
+
+            gamemoji = gmode.get("emoji")
+            embed = discord.Embed(title= gamemoji + ' ' + events.current[y].game_mode + ' - ' + events.current[y].map_name, color= 0xffd633)
+            
+            if events.current[y].has_modifier == True:
+                modifier = next(item for item in modifiers if item["modifier"] == events.current[y].modifier_name)
+                modmoji = modifier.get("emoji")
+                embed.add_field(name= 'Modifier', value = modmoji + ' ' + events.current[y].modifier_name, inline=False)
+            else:
+                pass
+            print(events.current[y].slot_name)
+            embed.set_thumbnail(url=events.current[y].map_image_url)
+            embed.add_field(name= 'Ends in', value= '<:clock:525632375888281610> ' + str(datetime.timedelta(seconds=events.current[y].end_time_in_seconds)))
+            if events.current[y].slot_name == "Ticketed Events":
+                embed.add_field(name= 'Rewards', value = '<:ticket:525661772896665621> ' + str(events.current[y].free_keys) + ' Free')
+            else:
+                embed.add_field(name= 'Rewards', value= '<:keys:525629631735267328> ' + str(events.current[y].free_keys) + ' Free')
+            await client.send_message(message.channel, embed = embed)
+            y = y+1  
 
             
 client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
