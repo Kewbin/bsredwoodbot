@@ -1,10 +1,34 @@
 import discord
 import asyncio
 import os
-import random
+import re
 import brawlstats
 import json
 import datetime
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+
+keyfile_dict = {
+  "type": "service_account",
+  "project_id": "bsbot-226217",
+  "private_key_id": "ec051d1f245707de80095dc8b22215df5ab7cdee",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDH5+tqNsb1/0Wg\noF/A+g/xHcfiFLcsGzLiMMHFCXinouDyUQAl/smSV8eC8hfPZYR6G3ZuAQB/6vkE\nA8BCYTxE5fZjP92jz0TwhN8VvKDLbKFZn3ExObPODJeNwGUyeKsqWKMh8J+AxCXy\nX1f5E4jULw3hLzdjZ7Z+idhtFN1pFdkb4PK6v/6UkjHDyJkT+7IW5BDtq61sCsRS\ntGL6V9foW6nnuON3IzFBDR5ii5si6mIFIQGGlTGEY+ptiKs10fO7eWpQrpQiIK+U\nELYR7gKP7rxnF2Yqk5oTeONsz2x9CodcGBHQ0zsPM0xLmPLSPPo6h65JS88iEY6B\nJhlnC7G7AgMBAAECggEARz2f2FjQG9/OtPkiVrfnEYMO9kNyqc3BmvlMPMdsz7UM\nnF6Agonj1PriV4imMpuXlBqQYJCL2IppFuStUhqr61PWtDUQ7C1UALEhfXIdDZHX\niIR5RtUs/lvfcL1lcxCs0ykGbfR+K1n7uf3/cHzlMNTaCeuVPiA6WasPTYR3iViG\nDd07FyyQp44dZEqfCt//IzKOj7aJ27iJgOQpMbeM3F2zZBmYr9JlB6bhEehQGB6Q\nZmasy9pe9YXXZUVN8N/y/+cXemeBEoNfbOu7jSvpO+0hXtzi2PwXTGog0Q30Sxzf\nVfMt1upMOncdKMdYBiCyzJAbQDoZzlo2IJcUlIp6pQKBgQDq4NeD/Bl8MyglYGkM\nRTAf77Pd9RN8N6grEB6xeoM9JLqO/vrAvmFxhYhIB9rfV8LzIx2U8PfT+ol7zfXl\nc3/MLgiyTIphkvS+hzdzETsijBaIgZwDPm7BMbcpTNNiPk9rS24Bu9vgegsXocs1\n4KzS2G97AO9LPxUkbnZGbQ4AvwKBgQDZ4fm4cTFVGs+3xpCXaDohCeuUjzxynfwW\nu0vuJeG38uR9mU2KesV6Mf9c04rV+YXbSaYh/pHwyjlYLe7MglOD2fJ7axIthyjl\nJhcVCIUTU0fPXK+JYAZDSpVOFIhkWtVHlQ/v0pW2J1Aeb38bHCkgZ1RXCKm/AsoI\nQlI0SBfSBQKBgQC6b0YiKZVBFIolQOWhK7oLX4TyBXo1+yetJtp2HbzWZ7T9lD8N\nhxBpv4hxRGrjJRJFU/ZDJxJQXGmMr+si+g7Szydv/3lIAhHqugG1gFPkFDY+nEJu\nALyA9Slhyu1u6e64R+NF1QuunrD3TSGz3mbP5aR3ikJnA+eQR23ycNXQmQKBgQDV\nqD0DWyxvMi2DH1pmvrRR9bJoKdWy561udRhOXiNsCOl7KLvbEe1YmHK7ik3Y6ikT\nErOxHjvqjcOR7uj+7sYKw8x+rk5TCvlVS/bSj1o/yyjd9RvFcL5zek3TFVtyXYhL\n+6Z3HF/nEcIFNnzEDuddeTZBaqNaRdfsJW0LC68gKQKBgHK1cx7uoVFaQm6VQ36x\nmQdUkeezbOOsPwZ27AcwgrFbh2HdD3aO5h7obIqHXYqB0siAAvCyDCGb3cCsKcV6\n+1OBMlS497faCUNpSvqDPwlvI84kBp4IZziY0zwnZ5bXVWhqrUgxjMb97Y6mL0Z5\n52fEkDn4cn0TgRaWKpJI7bUy\n-----END PRIVATE KEY-----\n",
+  "client_email": "bsbotredwood@bsbot-226217.iam.gserviceaccount.com",
+  "client_id": "108560087435782443699",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bsbotredwood%40bsbot-226217.iam.gserviceaccount.com"
+}
+
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
+
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+    keyfile_dict=keyfile_dict, scopes=scope)
+
+gc = gspread.authorize(credentials)
 
 #Discord
 client = discord.Client()
@@ -26,8 +50,10 @@ async def on_message(message):
 
     if '!CLUB' == message1 or '!CLAN' == message1:
         try:
+            await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
             try:
+                await client.send_typing(message.channel)
                 club = bs.get_club(message2.upper())
             except:
                 error = await client.send_message(message.channel, ':no_entry: Could not find club with this tag or there was an error getting club data. Please try again!')
@@ -35,6 +61,7 @@ async def on_message(message):
                 await client.delete_message(error)
         except:
             try:
+                await client.send_typing(message.channel)
                 club = bs.get_club('RURJY9')
             except:
                 error = await client.send_message(message.channel, ':no_entry: There was an error getting club data. Please try again!')
@@ -42,6 +69,7 @@ async def on_message(message):
                 await client.delete_message(error)
 
         try:
+            await client.send_typing(message.channel)
             members = club.members
             embed = discord.Embed(title=club.name + ' (#' + club.tag + ')', description=club.description, color= 0xffd633)
             embed.set_thumbnail(url= club.badge_url)
@@ -84,17 +112,20 @@ async def on_message(message):
         
     elif '!PROFILE' == message1 or '!STATS' == message1 or '!STAT' == message1:
         try:
+            await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
             try:
+                await client.send_typing(message.channel)
                 profile = bs.get_profile(message2.upper())
             except:
                 if '<@' in message2:
                     try:
-                        linked = json.loads(open('linked.json').read())
+                        await client.send_typing(message.channel)
+                        linked = gc.open('BSlinked').sheet1
                         message2 = message2.replace('<@', '')
                         message2 = message2.replace('>', '')
-                        link = next(item for item in linked if item["discord_id"] == message2)
-                        game_id = link.get("game_id")
+                        discid = linked.find(str(message.author.id))
+                        game_id = linked.cell(discid.row, 2).value
                         try:
                             profile = bs.get_profile(game_id)
                         except:
@@ -111,9 +142,10 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
-                linked = json.loads(open('linked.json').read())
-                link = next(item for item in linked if item["discord_id"] == str(message.author.id))
-                game_id = link.get("game_id")
+                await client.send_typing(message.channel)
+                linked = gc.open('BSlinked').sheet1
+                discid = linked.find(str(message.author.id))
+                game_id = linked.cell(discid.row, 2).value
                 try:
                     profile = bs.get_profile(game_id)
                 except:
@@ -125,29 +157,31 @@ async def on_message(message):
                 await asyncio.sleep(20)
                 await client.delete_message(error)
         
-        try:        
+        try:
+            await client.send_typing(message.channel)
             embed = discord.Embed(title=profile.name + ' (#' + profile.tag + ')', color= 0xffd633)
             embed.set_thumbnail(url= profile.avatar_url)
-            embed.add_field(name='Trophies', value= str(profile.trophies) + ' <:trophy:525016161285570571>')
-            embed.add_field(name='Highest Trophies', value= str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
-            embed.add_field(name='Level', value= '<:levelstar:525297407383044097> ' + str(profile.exp_level), inline=False)
-            embed.add_field(name='3v3 Wins', value= '<:gemgrab:525416312629886976> ' + str(profile.victories))
+            embed.add_field(name='Trophies', value= '**' + str(profile.trophies) + '**/' + str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
+            embed.add_field(name='Level', value= '<:levelstar:525297407383044097>' + str(profile.exp_level))
+            embed.add_field(name='3v3 Wins', value= str(profile.victories))
             embed.add_field(name='Showdown Wins', value= '<:showdown:525299101022158878> ' + str(profile.solo_showdown_victories))
             embed.add_field(name='Duo Showdown Wins', value= '<:duoshowdown:525299098354712576> ' + str(profile.duo_showdown_victories))
             embed.add_field(name='Best Time as Boss', value= '<:boss:525299096567808023> ' + profile.best_time_as_boss)
             embed.add_field(name='Best Robo Rumble Time', value= '<:roborumble:525299100778889217> ' + profile.best_robo_rumble_time)
-            embed.add_field(name='Brawlers Unlocked', value= '<:cards:525383827632422958> **' + str(profile.brawlers_unlocked) + '**/22')
+            embed.add_field(name='Brawlers Unlocked', value= '**' + str(profile.brawlers_unlocked) + '**/22')
             embed.add_field(name='Club', value= profile.club.name + ' (#' + profile.club.tag + ')')
             await client.send_message(message.channel, embed = embed)
         except:
             pass
 
-    elif '!LINK' == message1:
-        linked = json.loads(open('linked.json').read())
+    elif '!LINK' == message1 or '!SAVE' == message1:
+        linked = gc.open('BSlinked').sheet1
         try:
-            link = next(item for item in linked if item["discord_id"] == str(message.author.id))
-            game_id = link.get("game_id")
-            error = await client.send_message(message.channel, ':no_entry: This discord account is already linked to #' + game_id)
+            await client.send_typing(message.channel)
+            discid = linked.find(str(message.author.id))
+            gameid = linked.cell(discid.row, 2).value
+            profilename = linked.cell(discid.row, 3).value
+            error = await client.send_message(message.channel, ':no_entry: This discord account is already linked to ' + profilename + ' #' + gameid)
             await asyncio.sleep(10)
             await client.delete_message(error)
         except:
@@ -158,12 +192,9 @@ async def on_message(message):
                 except:
                     pass
                 try:
+                    await client.send_typing(message.channel)
                     profile = bs.get_profile(message2.upper())
-                    linked = json.load(open('linked.json'))
-                    data = {"discord_id": str(message.author.id), "game_id": message2.upper()}
-                    linked.append(data)
-                    with open('linked.json', 'w') as f:
-                        json.dump(linked, f)
+                    linked.append_row([str(message.author.id), message2.upper(), profile.name])
                     await client.send_message(message.channel, ':white_check_mark: Account succesfully linked to ' + profile.name + ' (#' + message2.upper() + ')')
                 except:
                     error = await client.send_message(message.channel, ':no_entry: Couldn\'t find an account with that tag!')
@@ -176,14 +207,12 @@ async def on_message(message):
 
     elif '!UNLINK' == message1:
         try:
-            obj  = json.load(open("linked.json"))
+            await client.send_typing(message.channel)
+            linked = gc.open('BSlinked').sheet1
 
-            for i in range(len(obj)):
-                if obj[i]["discord_id"] == str(message.author.id):
-                    obj.pop(i)
-                    break
+            discid = linked.find(str(message.author.id))
+            linked.delete_row(discid.row)
 
-            open("linked.json", "w").write(json.dumps(obj))
             await client.send_message(message.channel, ':white_check_mark: Account succesfully unlinked!')
         except:
             error = await client.send_message(message.channel, ':no_entry: Account not linked!')
@@ -193,6 +222,7 @@ async def on_message(message):
     
     elif '!BRAWLERS' == message1:
         try:
+            await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
             print(message2)
             try:
@@ -200,11 +230,12 @@ async def on_message(message):
             except:
                 if '<@' in message2:
                     try:
-                        linked = json.loads(open('linked.json').read())
+                        await client.send_typing(message.channel)
+                        linked = gc.open('BSlinked').sheet1
                         message3 = message2.replace('<@', '')
                         message3 = message3.replace('>', '')
-                        link = next(item for item in linked if item["discord_id"] == message3)
-                        game_id = link.get("game_id")
+                        discid = linked.find(message3)
+                        game_id = linked.cell(discid.row, 2).value
                         try:
                             profile = bs.get_profile(game_id)
                         except:
@@ -221,9 +252,10 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
-                linked = json.loads(open('linked.json').read())
-                link = next(item for item in linked if item["discord_id"] == str(message.author.id))
-                game_id = link.get("game_id")
+                await client.send_typing(message.channel)
+                linked = gc.open('BSlinked').sheet1
+                discid = linked.find(str(message.author.id))
+                game_id = linked.cell(discid.row, 2).value
                 try:
                     profile = bs.get_profile(game_id)
                 except:
@@ -236,6 +268,7 @@ async def on_message(message):
                 await client.delete_message(error)
 
         try:
+            await client.send_typing(message.channel)
             embed = discord.Embed(title=profile.name + ' (#' + profile.tag + ')', color= 0xffd633)
             brawlers = profile.brawlers
             x = 0
@@ -259,41 +292,67 @@ async def on_message(message):
             await client.send_message(message.channel, embed = embed)
         except:
             pass
-        
+
     elif '!EVENTS' == message1 or '!MAPS' == message1:
         try:
             message2 = str(message.content).split(' ',1)[1]
         except:
             pass
-        
         events = bs.get_events()
         y = 0
         gmodes = json.loads(open('gamemodes.json').read())
         modifiers = json.loads(open('modifiers.json').read())
-        for event in events.current:
-            try:
-                gmode = next(item for item in gmodes if item["gamemode"] == events.current[y].game_mode)
-            except:
-                pass
+        if 'later' == message2 or 'next' == message2:
+            await client.send_typing(message.channel)
+            for event in events.upcoming:
+                print(events.upcoming[y].game_mode)
+                gmode = next(item for item in gmodes if item["gamemode"] == events.upcoming[y].game_mode)
 
-            gamemoji = gmode.get("emoji")
-            embed = discord.Embed(title= gamemoji + ' ' + events.current[y].game_mode + ' - ' + events.current[y].map_name, color= 0xffd633)
-            
-            if events.current[y].has_modifier == True:
-                modifier = next(item for item in modifiers if item["modifier"] == events.current[y].modifier_name)
-                modmoji = modifier.get("emoji")
-                embed.add_field(name= 'Modifier', value = modmoji + ' ' + events.current[y].modifier_name, inline=False)
-            else:
-                pass
-            print(events.current[y].slot_name)
-            embed.set_thumbnail(url=events.current[y].map_image_url)
-            embed.add_field(name= 'Ends in', value= '<:clock:525632375888281610> ' + str(datetime.timedelta(seconds=events.current[y].end_time_in_seconds)))
-            if events.current[y].slot_name == "Ticketed Events":
-                embed.add_field(name= 'Rewards', value = '<:ticket:525661772896665621> ' + str(events.current[y].free_keys) + ' Free')
-            else:
-                embed.add_field(name= 'Rewards', value= '<:keys:525629631735267328> ' + str(events.current[y].free_keys) + ' Free')
-            await client.send_message(message.channel, embed = embed)
-            y = y+1  
+                gamemoji = gmode.get("emoji")
+                embed = discord.Embed(title= gamemoji + ' ' + events.upcoming[y].game_mode + ' - ' + events.upcoming[y].map_name, color= 0xffd633)
+                
+                if events.upcoming[y].has_modifier == True:
+                    modifier = next(item for item in modifiers if item["modifier"] == events.upcoming[y].modifier_name)
+                    modmoji = modifier.get("emoji")
+                    embed.add_field(name= 'Modifier', value = modmoji + ' ' + events.upcoming[y].modifier_name, inline=False)
+                else:
+                    pass
+                print(events.upcoming[y].slot_name)
+                embed.set_thumbnail(url=events.upcoming[y].map_image_url)
+                embed.add_field(name= 'Ends in', value= '<:clock:525632375888281610> ' + str(datetime.timedelta(seconds=events.upcoming[y].end_time_in_seconds)))
+                if events.upcoming[y].slot_name == "Ticketed Events":
+                    embed.add_field(name= 'Rewards', value = '<:ticket:525661772896665621> ' + str(events.upcoming[y].free_keys) + ' Free')
+                else:
+                    embed.add_field(name= 'Rewards', value= '<:keys:525629631735267328> ' + str(events.upcoming[y].free_keys) + ' Free')
+                await client.send_message(message.channel, embed = embed)
+                y = y+1
+        else:
+            await client.send_typing(message.channel)
+            for event in events.current:
+                try:
+                    gmode = next(item for item in gmodes if item["gamemode"] == events.current[y].game_mode)
+                except:
+                    pass
+
+                gamemoji = gmode.get("emoji")
+                embed = discord.Embed(title= gamemoji + ' ' + events.current[y].game_mode + ' - ' + events.current[y].map_name, color= 0xffd633)
+                
+                if events.current[y].has_modifier == True:
+                    modifier = next(item for item in modifiers if item["modifier"] == events.current[y].modifier_name)
+                    modmoji = modifier.get("emoji")
+                    embed.add_field(name= 'Modifier', value = modmoji + ' ' + events.current[y].modifier_name, inline=False)
+                else:
+                    pass
+                print(events.current[y].slot_name)
+                embed.set_thumbnail(url=events.current[y].map_image_url)
+                embed.add_field(name= 'Ends in', value= '<:clock:525632375888281610> ' + str(datetime.timedelta(seconds=events.current[y].end_time_in_seconds)))
+                if events.current[y].slot_name == "Ticketed Events":
+                    embed.add_field(name= 'Rewards', value = '<:ticket:525661772896665621> ' + str(events.current[y].free_keys) + ' Free')
+                else:
+                    embed.add_field(name= 'Rewards', value= '<:keys:525629631735267328> ' + str(events.current[y].free_keys) + ' Free')
+                await client.send_message(message.channel, embed = embed)
+                y = y+1
+        
 
             
 client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
