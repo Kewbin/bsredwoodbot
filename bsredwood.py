@@ -354,12 +354,12 @@ async def on_message(message):
                 await client.send_message(message.channel, embed = embed)
                 y = y+1
 
+            
+client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
 
 schedule.every(30).minutes.do(authorize)
 while 1:
     schedule.run_pending()
     time.sleep(1)
-            
-client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
 
 #https://discordapp.com/oauth2/authorize?client_id=525252549528256527&scope=bot&permissions=537377864
