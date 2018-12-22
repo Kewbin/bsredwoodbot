@@ -116,6 +116,7 @@ async def on_message(message):
             except:
                 if '<@' in message2:
                     try:
+                        gc = gspread.authorize(credentials)
                         linked = gc.open('BSlinked').sheet1
                         message3 = message2.replace('<@', '')
                         message3 = message3.replace('>', '')
@@ -137,6 +138,7 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
+                gc = gspread.authorize(credentials)
                 linked = gc.open('BSlinked').sheet1
                 discid = linked.find(str(message.author.id))
                 game_id = linked.cell(discid.row, 2).value
@@ -169,6 +171,7 @@ async def on_message(message):
             pass
 
     elif '!LINK' == message1 or '!SAVE' == message1:
+        gc = gspread.authorize(credentials)
         linked = gc.open('BSlinked').sheet1
         try:
             await client.send_typing(message.channel)
@@ -201,6 +204,7 @@ async def on_message(message):
     elif '!UNLINK' == message1:
         try:
             await client.send_typing(message.channel)
+            gc = gspread.authorize(credentials)
             linked = gc.open('BSlinked').sheet1
 
             discid = linked.find(str(message.author.id))
@@ -222,6 +226,7 @@ async def on_message(message):
             except:
                 if '<@' in message2:
                     try:
+                        gc = gspread.authorize(credentials)
                         linked = gc.open('BSlinked').sheet1
                         message3 = message2.replace('<@', '')
                         message3 = message3.replace('>', '')
@@ -243,6 +248,7 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
+                gc = gspread.authorize(credentials)
                 linked = gc.open('BSlinked').sheet1
                 discid = linked.find(str(message.author.id))
                 game_id = linked.cell(discid.row, 2).value
