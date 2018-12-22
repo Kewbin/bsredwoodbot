@@ -348,12 +348,105 @@ async def on_message(message):
                     embed.add_field(name= 'Rewards', value= '<:keys:525629631735267328> ' + str(events.current[y].free_keys) + ' Free')
                 await client.send_message(message.channel, embed = embed)
                 y = y+1
+                
+    elif '!COMPARE' == message1:
+        leagues = json.loads(open('leagues.json').read())
+        gc = gspread.authorize(credentials)
+        linked = gc.open('BSlinked').sheet1
+        try:
+            await client.send_typing(message.channel)
+            message2 = str(message.content).split(' ',2)[1]
+            message3 = str(message.content).split(' ',2)[2]
+            try:
+                profile1 = bs.get_profile(message2.upper())
+                profile2 = bs.get_profile(message3.upper())
+            except:
+                if '<@' in message2:
+                    try:
+                        message4 = message2.replace('<@', '')
+                        message4 = message4.replace('>', '')
+                        discid = linked.find(message4)
+                        game_id = linked.cell(discid.row, 2).value
+                        try:
+                            profile1 = bs.get_profile(game_id)
+                        except:
+                            error = await client.send_message(message.channel, ':no_entry: There was an error while getting player data. Please try again!')
+                            await asyncio.sleep(20)
+                            await client.delete_message(error)
+                    except:
+                        error = await client.send_message(message.channel, ':no_entry: Player 1 didn\'t link his game account to discord!')
+                        await asyncio.sleep(10)
+                        await client.delete_message(error)
+                else:
+                     profile1 = bs.get_profile(message2.upper())
+                     
+                if '<@' in message3:
+                    try:
+                        message5 = message3.replace(' <@', '')
+                        message5 = message5.replace('>', '')
+                        discid2 = linked.find(message5)
+                        game_id2 = linked.cell(discid2.row, 2).value
+                        try:
+                            profile2 = bs.get_profile(game_id2)
+                        except:
+                            error = await client.send_message(message.channel, ':no_entry: There was an error while getting player data. Please try again!')
+                            await asyncio.sleep(20)
+                            await client.delete_message(error)
+                    except:
+                        error = await client.send_message(message.channel, ':no_entry: Player 2 didn\'t link his game account to discord!')
+                        await asyncio.sleep(10)
+                        await client.delete_message(error)
+                else:
+                    profile2 = bs.get_profile(message3.upper())
 
+        except:
+            try:
+                message2 = str(message.content).split(' ',1)[1]
+                try:
+                    discid = linked.find(str(message.author.id))
+                    game_id = linked.cell(discid.row, 2).value
+                    profile1 = bs.get_profile(game_id)
+                except:
+                    error = await client.send_message(message.channel, ':no_entry: You must specify an user! If you want to display your own stats, link your account using `!link`')
+                    await asyncio.sleep(20)
+                    await client.delete_message(error)
+                try:
+                    profile2 = bs.get_profile(message2.upper())
+                except:
+                    if '<@' in message2:
+                        try:
+                            message4 = message2.replace('<@', '')
+                            message4 = message4.replace('>', '')
+                            discid = linked.find(message4)
+                            game_id = linked.cell(discid.row, 2).value
+                            try:
+                                profile2 = bs.get_profile(game_id)
+                            except:
+                                error = await client.send_message(message.channel, ':no_entry: There was an error while getting player data. Please try again!')
+                                await asyncio.sleep(20)
+                                await client.delete_message(error)
+                        except:
+                            error = await client.send_message(message.channel, ':no_entry: Player 1 didn\'t link his game account to discord!')
+                            await asyncio.sleep(10)
+                            await client.delete_message(error)
+                    else:
+                         profile2 = bs.get_profile(message2.upper())
+            except:
+                error = await client.send_message(message.channel, ':no_entry: Usage: `!compare #gametag1 #gametag2`')
+                await asyncio.sleep(20)
+                await client.delete_message(error)
+
+        embed = discord.Embed(title=profile1.name + ' (#' + profile1.tag + ') vs ' + profile2.name + ' (#' + profile2.tag + ')', color= 0xffd633)
+        embed.add_field(name='Trophies',inline=False, value= str(profile1.trophies) + ' <:trophy:525016161285570571> ' + str(profile2.trophies))
+        embed.add_field(name='Level',inline=False, value= str(profile1.exp_level) + ' <:levelstar:525297407383044097> ' + str(profile2.exp_level))
+        embed.add_field(name='3v3 Wins',inline=False, value= str(profile1.victories) + ' <:gemgrab:525416312629886976> ' + str(profile2.victories))
+        embed.add_field(name='Showdown Wins',inline=False, value= str(profile1.solo_showdown_victories) + ' <:showdown:525299101022158878> ' + str(profile2.solo_showdown_victories))
+        embed.add_field(name='Duo Showdown Wins',inline=False, value= str(profile1.duo_showdown_victories) + ' <:duoshowdown:525299098354712576> ' + str(profile2.duo_showdown_victories))
+        embed.add_field(name='Best Time as Boss',inline=False, value= profile1.best_time_as_boss + ' <:boss:525299096567808023> ' + profile2.best_time_as_boss)
+        embed.add_field(name='Best Robo Rumble Time',inline=False, value= profile1.best_robo_rumble_time + ' <:roborumble:525299100778889217> ' + profile2.best_robo_rumble_time)
+        embed.add_field(name='Brawlers Unlocked',inline=False, value= '**' + str(profile1.brawlers_unlocked) + '**/22 <:cards:525383827632422958> **' + str(profile2.brawlers_unlocked) + '**/22')
+        await client.send_message(message.channel, embed = embed)
 
 client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
-
-
-            
-
 
 #https://discordapp.com/oauth2/authorize?client_id=525252549528256527&scope=bot&permissions=537377864
