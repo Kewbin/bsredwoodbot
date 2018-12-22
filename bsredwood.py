@@ -7,8 +7,6 @@ import json
 import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import schedule
-import time
 
 
 keyfile_dict = {
@@ -25,28 +23,16 @@ keyfile_dict = {
 }
 
 scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
+        'https://www.googleapis.com/auth/drive']
 
 credentials = ServiceAccountCredentials.from_json_keyfile_dict(
     keyfile_dict=keyfile_dict, scopes=scope)
-
-gc = gspread.authorize(credentials)
 
 #Discord
 client = discord.Client()
 
 #BrawlStats
 bs = brawlstats.Client('88834ccba20cb095f47cb9a0eab260e11b1f8143b42306bbe98c635af9545e53f7f73a52fa351b79')
-
-def authorize():
-    scope = ['https://spreadsheets.google.com/feeds',
-             'https://www.googleapis.com/auth/drive']
-
-    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-        keyfile_dict=keyfile_dict, scopes=scope)
-
-    gc = gspread.authorize(credentials)
-    
 
 @client.event
 async def on_ready():
@@ -120,6 +106,8 @@ async def on_message(message):
             pass
         
     elif '!PROFILE' == message1 or '!STATS' == message1 or '!STAT' == message1:
+        leagues = json.loads(open('leagues.json').read())
+        gc = gspread.authorize(credentials)
         try:
             await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
@@ -166,9 +154,13 @@ async def on_message(message):
         try:
             embed = discord.Embed(title=profile.name + ' (#' + profile.tag + ')', color= 0xffd633)
             embed.set_thumbnail(url= profile.avatar_url)
-            embed.add_field(name='Trophies', value= str(profile.trophies) + ' <:trophy:525016161285570571>')
-            embed.add_field(name='Highest Trophies', value= str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
-            embed.add_field(name='Level', value= '<:levelstar:525297407383044097>' + str(profile.exp_level), inline=False)
+            if profile.trophies < 500:
+                embed.add_field(name='Trophies', value= '**' + str(profile.trophies) + '** / ' + str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
+            elif profile.trophies >= 500:
+                league = next(item for item in leagues if item["min_trophies"] <= profile.trophies <= item["max_trophies"])
+                leaguemoji = league.get('emoji')
+                embed.add_field(name='Trophies', value= leaguemoji + ' **' + str(profile.trophies) + '**/' + str(profile.highest_trophies) + ' <:trophy:525016161285570571>')
+            embed.add_field(name='Level', value= '<:levelstar:525297407383044097>' + str(profile.exp_level))
             embed.add_field(name='3v3 Wins', value= '<:gemgrab:525416312629886976> ' + str(profile.victories))
             embed.add_field(name='Showdown Wins', value= '<:showdown:525299101022158878> ' + str(profile.solo_showdown_victories))
             embed.add_field(name='Duo Showdown Wins', value= '<:duoshowdown:525299098354712576> ' + str(profile.duo_showdown_victories))
@@ -181,6 +173,7 @@ async def on_message(message):
             pass
 
     elif '!LINK' == message1 or '!SAVE' == message1:
+        gc = gspread.authorize(credentials)
         linked = gc.open('BSlinked').sheet1
         try:
             await client.send_typing(message.channel)
@@ -211,6 +204,7 @@ async def on_message(message):
                 await client.delete_message(error)
 
     elif '!UNLINK' == message1:
+        gc = gspread.authorize(credentials)
         try:
             await client.send_typing(message.channel)
             linked = gc.open('BSlinked').sheet1
@@ -226,6 +220,7 @@ async def on_message(message):
 
     
     elif '!BRAWLERS' == message1:
+        gc = gspread.authorize(credentials)
         try:
             await client.send_typing(message.channel)
             message2 = str(message.content).split(' ',1)[1]
@@ -354,12 +349,11 @@ async def on_message(message):
                 await client.send_message(message.channel, embed = embed)
                 y = y+1
 
-            
+
 client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
 
-schedule.every(30).minutes.do(authorize)
-while 1:
-    schedule.run_pending()
-    time.sleep(1)
+
+            
+
 
 #https://discordapp.com/oauth2/authorize?client_id=525252549528256527&scope=bot&permissions=537377864
