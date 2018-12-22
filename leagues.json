@@ -1,0 +1,10 @@
+[
+{"min_trophies": 500, "max_trophies": 999, "emoji":"<:league1:525975300295753729>"},
+{"min_trophies": 1000, "max_trophies": 1999, "emoji":"<:league2:525975302522929164>"},
+{"min_trophies": 2000, "max_trophies": 2999, "emoji":"<:league3:525975306625089548>"},
+{"min_trophies": 3000, "max_trophies": 3999, "emoji":"<:league4:525975310056030208>"},
+{"min_trophies": 4000, "max_trophies": 5999, "emoji":"<:league5:525975310714404883>"},
+{"min_trophies": 6000, "max_trophies": 7999, "emoji":"<:league6:525975310806548520>"},
+{"min_trophies": 8000, "max_trophies": 9999, "emoji":"<:league7:525975311733489664>"},
+{"min_trophies": 10000, "max_trophies": 999, "emoji":"<:league8:525975314036293652>"}
+]
