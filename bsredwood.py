@@ -7,6 +7,7 @@ import json
 import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import schedule
 
 
 keyfile_dict = {
@@ -35,6 +36,16 @@ client = discord.Client()
 
 #BrawlStats
 bs = brawlstats.Client('88834ccba20cb095f47cb9a0eab260e11b1f8143b42306bbe98c635af9545e53f7f73a52fa351b79')
+
+def authorize():
+    scope = ['https://spreadsheets.google.com/feeds',
+             'https://www.googleapis.com/auth/drive']
+
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+        keyfile_dict=keyfile_dict, scopes=scope)
+
+    gc = gspread.authorize(credentials)
+    
 
 @client.event
 async def on_ready():
@@ -116,7 +127,6 @@ async def on_message(message):
             except:
                 if '<@' in message2:
                     try:
-                        gc = gspread.authorize(credentials)
                         linked = gc.open('BSlinked').sheet1
                         message3 = message2.replace('<@', '')
                         message3 = message3.replace('>', '')
@@ -138,7 +148,6 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
-                gc = gspread.authorize(credentials)
                 linked = gc.open('BSlinked').sheet1
                 discid = linked.find(str(message.author.id))
                 game_id = linked.cell(discid.row, 2).value
@@ -171,7 +180,6 @@ async def on_message(message):
             pass
 
     elif '!LINK' == message1 or '!SAVE' == message1:
-        gc = gspread.authorize(credentials)
         linked = gc.open('BSlinked').sheet1
         try:
             await client.send_typing(message.channel)
@@ -204,7 +212,6 @@ async def on_message(message):
     elif '!UNLINK' == message1:
         try:
             await client.send_typing(message.channel)
-            gc = gspread.authorize(credentials)
             linked = gc.open('BSlinked').sheet1
 
             discid = linked.find(str(message.author.id))
@@ -226,7 +233,6 @@ async def on_message(message):
             except:
                 if '<@' in message2:
                     try:
-                        gc = gspread.authorize(credentials)
                         linked = gc.open('BSlinked').sheet1
                         message3 = message2.replace('<@', '')
                         message3 = message3.replace('>', '')
@@ -248,7 +254,6 @@ async def on_message(message):
                     await client.delete_message(error)
         except:
             try:
-                gc = gspread.authorize(credentials)
                 linked = gc.open('BSlinked').sheet1
                 discid = linked.find(str(message.author.id))
                 game_id = linked.cell(discid.row, 2).value
@@ -347,8 +352,12 @@ async def on_message(message):
                     embed.add_field(name= 'Rewards', value= '<:keys:525629631735267328> ' + str(events.current[y].free_keys) + ' Free')
                 await client.send_message(message.channel, embed = embed)
                 y = y+1
-        
 
+
+schedule.every(30).minutes.do(authorize)
+while 1:
+    schedule.run_pending()
+    time.sleep(1)
             
 client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
 
