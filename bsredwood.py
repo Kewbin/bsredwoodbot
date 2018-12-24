@@ -435,6 +435,33 @@ async def on_message(message):
                 error = await client.send_message(message.channel, ':no_entry: Usage: `!compare #gametag1 #gametag2`')
                 await asyncio.sleep(20)
                 await client.delete_message(error)
+           
+     elif '.MSG' == message1 and message.author.id == '282914836084686848':
+        message2 = str(message.content).split(' ',2)[1]
+
+        if 'FAHRI' == message2.upper():
+            message2 = '278127029734604800'
+        elif 'SANDALFON' == message2.upper():
+            message2 = '283224945843109888'
+        elif 'AIDEN' == message2.upper():
+            message2 = '287728754095161356'
+        elif 'KEWBIN' == message2.upper():
+            message2 = '282914836084686848'
+        elif 'MURAT' == message2.upper():
+            message2 = '460006412702056458'
+        
+        message3 = '<:league8:525975314036293652> ' + str(message.content).split(' ',2)[2]
+        if message.author == client.user:
+            return
+        reciever = await client.get_user_info(message2)
+        await client.send_message(reciever, message3)
+
+    elif message1 == message1 and message.server == None:
+        if message.author == client.user:
+            return
+        content = '**' + str(message.author) + '** > ' + str(message.content)
+        cenl = client.get_channel('525341774969962497')
+        await client.send_message(cenl , content)
 
         embed = discord.Embed(title=profile1.name + ' (#' + profile1.tag + ') vs ' + profile2.name + ' (#' + profile2.tag + ')', color= 0xffd633)
         embed.add_field(name='Trophies',inline=False, value= str(profile1.trophies) + ' <:trophy:525016161285570571> ' + str(profile2.trophies))
