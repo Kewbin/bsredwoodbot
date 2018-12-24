@@ -435,8 +435,19 @@ async def on_message(message):
                 error = await client.send_message(message.channel, ':no_entry: Usage: `!compare #gametag1 #gametag2`')
                 await asyncio.sleep(20)
                 await client.delete_message(error)
-           
-     elif '.MSG' == message1 and message.author.id == '282914836084686848':
+
+        embed = discord.Embed(title=profile1.name + ' (#' + profile1.tag + ') vs ' + profile2.name + ' (#' + profile2.tag + ')', color= 0xffd633)
+        embed.add_field(name='Trophies',inline=False, value= str(profile1.trophies) + ' <:trophy:525016161285570571> ' + str(profile2.trophies))
+        embed.add_field(name='Level',inline=False, value= str(profile1.exp_level) + ' <:levelstar:525297407383044097> ' + str(profile2.exp_level))
+        embed.add_field(name='3v3 Wins',inline=False, value= str(profile1.victories) + ' <:gemgrab:525416312629886976> ' + str(profile2.victories))
+        embed.add_field(name='Showdown Wins',inline=False, value= str(profile1.solo_showdown_victories) + ' <:showdown:525299101022158878> ' + str(profile2.solo_showdown_victories))
+        embed.add_field(name='Duo Showdown Wins',inline=False, value= str(profile1.duo_showdown_victories) + ' <:duoshowdown:525299098354712576> ' + str(profile2.duo_showdown_victories))
+        embed.add_field(name='Best Time as Boss',inline=False, value= profile1.best_time_as_boss + ' <:boss:525299096567808023> ' + profile2.best_time_as_boss)
+        embed.add_field(name='Best Robo Rumble Time',inline=False, value= profile1.best_robo_rumble_time + ' <:roborumble:525299100778889217> ' + profile2.best_robo_rumble_time)
+        embed.add_field(name='Brawlers Unlocked',inline=False, value= '**' + str(profile1.brawlers_unlocked) + '**/22 <:cards:525383827632422958> **' + str(profile2.brawlers_unlocked) + '**/22')
+        await client.send_message(message.channel, embed = embed)
+        
+    elif '.MSG' == message1 and message.author.id == '282914836084686848':
         message2 = str(message.content).split(' ',2)[1]
 
         if 'FAHRI' == message2.upper():
@@ -462,17 +473,6 @@ async def on_message(message):
         content = '**' + str(message.author) + '** > ' + str(message.content)
         cenl = client.get_channel('525341774969962497')
         await client.send_message(cenl , content)
-
-        embed = discord.Embed(title=profile1.name + ' (#' + profile1.tag + ') vs ' + profile2.name + ' (#' + profile2.tag + ')', color= 0xffd633)
-        embed.add_field(name='Trophies',inline=False, value= str(profile1.trophies) + ' <:trophy:525016161285570571> ' + str(profile2.trophies))
-        embed.add_field(name='Level',inline=False, value= str(profile1.exp_level) + ' <:levelstar:525297407383044097> ' + str(profile2.exp_level))
-        embed.add_field(name='3v3 Wins',inline=False, value= str(profile1.victories) + ' <:gemgrab:525416312629886976> ' + str(profile2.victories))
-        embed.add_field(name='Showdown Wins',inline=False, value= str(profile1.solo_showdown_victories) + ' <:showdown:525299101022158878> ' + str(profile2.solo_showdown_victories))
-        embed.add_field(name='Duo Showdown Wins',inline=False, value= str(profile1.duo_showdown_victories) + ' <:duoshowdown:525299098354712576> ' + str(profile2.duo_showdown_victories))
-        embed.add_field(name='Best Time as Boss',inline=False, value= profile1.best_time_as_boss + ' <:boss:525299096567808023> ' + profile2.best_time_as_boss)
-        embed.add_field(name='Best Robo Rumble Time',inline=False, value= profile1.best_robo_rumble_time + ' <:roborumble:525299100778889217> ' + profile2.best_robo_rumble_time)
-        embed.add_field(name='Brawlers Unlocked',inline=False, value= '**' + str(profile1.brawlers_unlocked) + '**/22 <:cards:525383827632422958> **' + str(profile2.brawlers_unlocked) + '**/22')
-        await client.send_message(message.channel, embed = embed)
 
 client.run('NTI1MjUyNTQ5NTI4MjU2NTI3.Dvz_gw.DITUyWDGBLtcgJKKG5ehhzN9HA4')
 
